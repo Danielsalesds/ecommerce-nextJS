@@ -16,8 +16,7 @@ export default function ProductGrid({ produtos }: Props) {
 
     const cart = await res.json();
     localStorage.setItem("cartId", cart.id);
-    // Atualiza localStorage → Navbar vai reagir automaticamente
-   // localStorage.setItem("cartCount", String(cart.cartItem.quantity));
+    
    window.dispatchEvent(new Event("cart-updated"));
 
 

@@ -14,6 +14,60 @@ export default function CartPage() {
       .then(res => res.json())
       .then(setCart);
   }, []);
+  //Remover cartItem de cart
+  async function removeItem(cartItemId: string) {
+    const res = await fetch(`/api/cart?cartItemId=${cartItemId}`, {
+        method: "DELETE",
+    });
+
+    if (!res.ok) {
+        console.error("Erro ao deletar item:", await res.text());
+        return;
+    }
+    const data = await res.json();
+    console.log(data);
+
+  // Atualiza o estado local do carrinho
+  setCart((prev: any) => {
+    if (!prev) return prev;
+
+    let newItems;
+
+    if (data.updatedItem) {
+      // Atualiza quantidade
+      newItems = prev.items.map((item: any) =>
+        item.id === cartItemId
+          ? { ...item, quantity: data.updatedItem.quantity }
+          : item
+      );
+    }
+
+    if (!data.updatedItem || data.updatedItem.quantity === 0) {
+      // REMOVE DO ARRAY
+      newItems = prev.items.filter((item: any) => item.id !== cartItemId);
+    }
+
+    // Recalcular subtotal e total no front
+    const newSubtotal = newItems.reduce(
+      (acc: number, item: any) => acc + item.quantity * item.product.price,
+      0
+    );
+    // Atualiza localStorage → Navbar vai reagir automaticamente
+    //localStorage.setItem("cartCount", String(data.updatedItem.quantity));
+    window.dispatchEvent(new Event("cart-updated"));
+
+
+    return {
+      ...prev,
+      items: newItems,
+      subtotal: newSubtotal,
+      total: newSubtotal,
+    };
+  });
+
+    
+}
+
 
   if (!cart) return <p className="text-center mt-10 text-gray-500">Carregando...</p>;
 
@@ -28,19 +82,31 @@ export default function CartPage() {
       <div className="space-y-4">
         {cart.items.map((item: any) => (
           <div key={item.id} className="flex flex-col md:flex-row items-center justify-between bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">
+            <img
+              src={item.product.image_url}
+              alt={item.product.name}
+              className="w-20 h-20 object-cover rounded mr-4 bg-zinc-200"
+              onError={(e) => {
+                e.currentTarget.onerror = null; 
+                e.currentTarget.src = "/placeholder.svg";
+              }}
+            />
             <div className="flex-1">
               <h2 className="text-lg font-semibold text-gray-800">{item.product.name}</h2>
               <p className="text-sm text-gray-500 mt-1">
                 {item.quantity}x R$ {item.product.price.toFixed(2)}
               </p>
+              
             </div>
             <p className="text-lg font-bold text-gray-900 mt-2 md:mt-0">
               R$ {(item.product.price * item.quantity).toFixed(2)}
             </p>
+            
             {/* Botões + e - à esquerda */}
             <div className="flex items-center border border-gray-300 rounded-md overflow-hidden ml-4">
             <button
                 className="px-3 py-1 bg-white text-black font-bold hover:bg-gray-100 transition"
+                onClick={() => removeItem(item.id)}
             >
                 -
             </button>

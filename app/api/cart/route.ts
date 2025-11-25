@@ -72,3 +72,48 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: "Erro ao adicionar item ao carrinho" }, { status: 500 });
     }
 }
+//Remover cartItem do cart
+
+
+export async function DELETE(request: Request) {
+  try {
+    const url = new URL(request.url);
+    const cartItemId = url.searchParams.get("cartItemId");
+
+    if (!cartItemId) {
+      return NextResponse.json({ message: "cartItemId é obrigatório" }, { status: 400 });
+    }
+
+    // Busca o cartItem atual
+    const cartItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId },
+    });
+
+    if (!cartItem) {
+      return NextResponse.json({ message: "Item não encontrado" }, { status: 404 });
+    }
+
+
+    // Se quantidade == 1 → deleta
+    if (cartItem.quantity === 1) {
+      const deletedItem = await prisma.cartItem.delete({
+        where: { id: cartItemId },
+      });
+
+      return NextResponse.json({ deletedItem });
+    }
+
+    // Se quantidade > 1 → decrementa
+    const updatedItem = await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { quantity: cartItem.quantity - 1 },
+    });
+
+    return NextResponse.json({ updatedItem });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: error.message || "Erro ao remover item" },
+      { status: 500 }
+    );
+  }
+}

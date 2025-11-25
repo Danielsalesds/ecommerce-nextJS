@@ -16,6 +16,10 @@ export default function ProductGrid({ produtos }: Props) {
 
     const cart = await res.json();
     localStorage.setItem("cartId", cart.id);
+    // Atualiza localStorage → Navbar vai reagir automaticamente
+   // localStorage.setItem("cartCount", String(cart.cartItem.quantity));
+   window.dispatchEvent(new Event("cart-updated"));
+
 
     console.log("Carrinho atualizado:", cart);
   }
@@ -27,7 +31,15 @@ export default function ProductGrid({ produtos }: Props) {
           key={item.id}
           className="bg-white rounded-lg shadow hover:shadow-lg transition p-4"
         >
-          <div className="w-full h-40 bg-zinc-200 rounded mb-4" />
+         <img
+            src={item.image_url}
+            alt={item.name}
+            className="w-full h-40 object-cover rounded mb-4 bg-zinc-200"
+            onError={(e) => {
+              e.currentTarget.onerror = null; // evita loop
+              e.currentTarget.src = "/placeholder.svg";
+            }}
+          />
 
           <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
 

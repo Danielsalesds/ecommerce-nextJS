@@ -1,36 +1,185 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛒 E-commerce Next.js + Prisma + PostgreSQL
 
-## Getting Started
+Aplicação web simples de e-commerce construída com **Next.js (App Router)**, **Prisma ORM**, **PostgreSQL** e **Docker Compose**.
 
-First, run the development server:
+O projeto contém frontend e backend integrados, permitindo gerenciar produtos, adicionar/remover itens em um carrinho e visualizar o resumo do carrinho em tempo real.
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+* **Next.js 14+** (App Router)
+* **React**
+* **TypeScript**
+* **Prisma ORM**
+* **PostgreSQL**
+* **Docker & Docker Compose**
+* **Node.js**
+
+---
+
+## 📦 Funcionalidades
+
+### 🖥️ **Frontend**
+
+* Listagem de produtos
+* Página de detalhes do carrinho
+* Botões de adicionar/remover itens
+* Cálculo automático de subtotal e total
+
+### 🛠️ **Backend (API Routes - Next.js)**
+
+Endpoints implementados:
+
+| Método | Rota            | Descrição                 |
+| ------ | --------------- | ------------------------- |
+| GET    | `/api/products` | Lista todos os produtos   |
+| GET    | `/api/cart`     | Consulta o carrinho atual |
+| POST   | `/api/cart`     | Adiciona item ao carrinho |
+| DELETE | `/api/cart/:id` | Remove item do carrinho   |
+
+### 🗄️ **Banco de Dados**
+
+Tabelas usadas:
+
+* `products (id, name, price, image_url)`
+* `cart (id, subtotal, total)`
+* `cart_items (id, cart_id, product_id, quantity)`
+
+---
+
+## 🧰 **Como Rodar o Projeto Localmente**
+
+### ✔ 1. Clone o repositório
+
+```bash
+git clone https://github.com/Danielsalesds/ecommerce-nextJS.git
+cd ecommerce-nextJS
+```
+
+---
+
+## ✔ 2. Configure variáveis de ambiente
+
+Crie o arquivo:
+
+```
+.env
+```
+
+Exemplo básico:
+
+```
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ecommerce"
+```
+
+---
+
+## ✔ 3. Subir o PostgreSQL com Docker
+
+```bash
+docker compose up -d
+```
+
+Isso iniciará o banco configurado no `docker-compose.yml`.
+
+---
+
+## ✔ 4. Instalar dependências
+
+```bash
+npm install
+```
+
+---
+
+## ✔ 5. Rodar as migrations do Prisma
+
+```bash
+npx prisma migrate dev
+```
+
+Você também pode visualizar o banco:
+
+```bash
+npx prisma studio
+```
+
+---
+
+## ✔ 6. Rodar a aplicação
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abra no navegador:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉 [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧪 **Estrutura de Pastas**
 
-To learn more about Next.js, take a look at the following resources:
+```
+.
+├── app/
+│   ├── api/
+│   │   ├── cart/
+│   │   └── products/
+│   ├── cart/
+│   └── page.tsx
+├── prisma/
+│   └── schema.prisma
+├── docker-compose.yml
+├── package.json
+├── README.md
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📤 Deploy
 
-## Deploy on Vercel
+Você pode fazer deploy em:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* **Vercel** (frontend + backend juntos)
+* **Render** (banco PostgreSQL)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+Guia oficial:
+[https://nextjs.org/docs/app/building-your-application/deploying](https://nextjs.org/docs/app/building-your-application/deploying)
+
+---
+
+## 📝 Git & Commits
+
+O projeto segue boas práticas de versionamento:
+
+Exemplos de commits semânticos:
+
+```
+feat: adicionar endpoint de criação de produto
+fix: corrigir cálculo do subtotal
+style: melhorar layout da página do carrinho
+refactor: reorganizar serviços da API
+```
+
+---
+
+## 📚 Aprendizados & Objetivo
+
+Este projeto demonstra:
+
+* Integração completa **Next.js + Prisma**
+* Utilização de **Docker** para ambiente isolado
+* APIs internas utilizando **Next.js App Router**
+* Operações CRUD reais com banco PostgreSQL
+* Criação de um mini e-commerce funcional
+
+---
+
+## 📄 Licença
+
+Este projeto é de estudo e livre para uso pessoal.
+
+---

@@ -8,7 +8,7 @@ export default function ProductGrid({ produtos }: Props) {
   async function addToCart(productId: string) {
     const cartId = localStorage.getItem("cartId");
 
-    const res = await fetch("http://localhost:3000/api/cart", {
+    const res = await fetch("/api/cart", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ productId, cartId }),

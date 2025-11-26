@@ -113,9 +113,13 @@ npx prisma studio
 npm run dev
 ```
 
-Abra no navegador:
+Abra no navegador pra rodar localmente:
 
 👉 [http://localhost:3000](http://localhost:3000)
+
+Abra no navegador pra rodar o Deploy:
+
+👉 https://ecommerce-next-js-silk.vercel.app
 
 ---
 

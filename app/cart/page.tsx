@@ -27,7 +27,7 @@ export default function CartPage() {
     const data = await res.json();
     console.log(data);
 
-  // Atualiza o estado local do carrinho
+    // Atualiza o estado local do carrinho
   setCart((prev: any) => {
     if (!prev) return prev;
 
@@ -67,6 +67,57 @@ export default function CartPage() {
 
     
 }
+//adicionar subItem
+async function addToCart(productId: string) {
+  const cartId = localStorage.getItem("cartId");
+
+  const res = await fetch("/api/cart", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ productId, cartId }),
+  });
+
+  const data = await res.json();
+
+  // Salva id do carrinho
+  localStorage.setItem("cartId", data.id);
+
+  // Atualiza o estado do carrinho local
+  setCart((prev: any) => {
+    if (!prev) return data; // se estava vazio, define tudo
+
+    let newItems;
+
+    const existing = prev.items.find((i: any) => i.product.id === productId);
+
+    if (existing) {
+      // Se o item JÁ existe, só aumenta a quantity
+      newItems = prev.items.map((item: any) =>
+        item.product.id === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      // Se o item NÃO existia, adiciona no array
+      newItems = [...prev.items, { ...data.newItem }];
+    }
+
+    const newSubtotal = newItems.reduce(
+      (acc: number, it: any) => acc + it.quantity * it.product.price,
+      0
+    );
+
+    return {
+      ...prev,
+      items: newItems,
+      subtotal: newSubtotal,
+      total: newSubtotal,
+    };
+  });
+
+  window.dispatchEvent(new Event("cart-updated"));
+}
+
 
 
   if (!cart) return <p className="text-center mt-10 text-gray-500">Carregando...</p>;
@@ -111,7 +162,12 @@ export default function CartPage() {
                 -
             </button>
             <span className="px-4 py-1 text-gray-700">{item.quantity}</span>
-            <Link href="/" className="px-3 py-1 bg-white text-black font-bold hover:bg-gray-100 transition" > + </Link>
+            <button
+                className="px-3 py-1 bg-white text-black font-bold hover:bg-gray-100 transition"
+                onClick={() => addToCart(item.product.id)}
+            >
+                +
+            </button>
             </div>
 
             

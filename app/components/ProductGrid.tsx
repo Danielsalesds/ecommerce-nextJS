@@ -40,7 +40,7 @@ export default function ProductGrid({ produtos }: Props) {
             }}
           />
 
-          <h3 className="font-semibold text-lg mb-2">{item.name}</h3>
+          <h3 className="font-semibold text-lg mb-2 text-gray-800">{item.name}</h3>
 
           <p className="text-zinc-700 font-bold text-xl mb-2">
             R$ {item.price}
